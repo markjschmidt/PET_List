@@ -34,11 +34,23 @@ Two types of input data files are used:
 ## Domain Knowledge
 
 ### Vereos PET Ring Geometry
-- **576 crystals** total (IDs 0–575) arranged in **18 modules × 32 crystals/module**
-- **40 axial rows** (za, zb values 0–39)
+| Parameter | Value |
+|-----------|-------|
+| Axial FOV | 164 mm |
+| Ring Diameter | 764 mm |
+| Crystal Size | 4 × 4 × 19 mm |
+| Total detector elements | 23,040 |
+| Timing Resolution | 320 ps |
+| Coincidence Window | 256 FOV: 2.0 ns; 576 FOV: 4.0 ns; 676 FOV: 4.6 ns |
+| Ring circumference | 764 mm × π ≈ 2,400 mm → 4.17 mm between crystal centers |
+| Reconstruction diameter | 764 mm + 19 mm = 783 mm |
+
+- **Ring layout**: 18 modules × 4 tiles across × 8 pixels/tile = **576 crystals** around circumference (IDs 0–575)
+- **Axial layout**: 5 tiles deep × 8 pixels/tile = **40 crystals** in axial direction (za, zb values 0–39)
 - Crystal 0 is at **3 o'clock (0°)**; crystal IDs increase **clockwise**
 - Angular position: `theta = crystal_id × 2π / 576`
 - Module number: `module = crystal_id // 32`
+- Light travels **299.8 mm per nanosecond**; max 576 FOV LOR length ≈ 764 mm → ≈ 2,548 ps flight time
 
 ### LOR Data Fields
 | Field | Description |
@@ -48,6 +60,15 @@ Two types of input data files are used:
 | `tof` | Signed Time of Flight bin (negative = xa receives photon first) |
 | `PROMPT` | True coincidence event |
 | `DELAY` | Random coincidence event (delayed window) |
+
+### Coincidence Event Types
+| Type | Definition |
+|------|------------|
+| **Singles** | Individual gamma rays detected by any element, regardless of coincidence |
+| **Prompt** | All events within the timing window — includes true + random coincidences; measured Coincidence Rate = Prompt Rate |
+| **True** | Two 511 keV gammas from the same annihilation, detected by opposing detectors within the coincidence window |
+| **Random** | Two gammas from unrelated annihilations detected within the coincidence window (DELAY events in list data) |
+| **Scatter** | One or both gammas have undergone Compton scattering before detection, causing mispositioning |
 
 ### Key Physics
 - For a **centered source**: `xb ≈ (xa + 288) % 576` (exact 180°, i.e., 288 crystals = half ring)
