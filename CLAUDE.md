@@ -30,6 +30,7 @@ Two types of input data files are used:
 - `MJS_Gemini_TOF_List_data_20250525.ipynb` — Parse binary .list event data, signed TOF decoding (Gemini)
 - `MJS_AI_PET_Ring_Circular_Visualization_revD/revD2/revG/revH_*.ipynb` — Iterative improvements to circular polar ring visualization
 - `MJS_Sonnet4_Randoms_list_data_*.ipynb` — 3D heatmaps and TOF analysis of random coincidences (latest work)
+- `MJS_Claude_Starter_Agent_PET_List_20261109.ipynb` — Starter Claude agent (Anthropic SDK Tool Runner) with tools that load and analyze listPrint .txt files; needs `ANTHROPIC_API_KEY` in Colab Secrets
 
 ## Domain Knowledge
 
