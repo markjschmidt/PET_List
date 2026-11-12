@@ -22,6 +22,8 @@ Two types of input data files are used:
 
 **ListPrint `.txt` files** — human-readable output from the Philips `listPrint` utility:
 - `src_at_bottom_24934.txt`, `3OCLK_0_1000.txt`, `listPrint_Randoms2min_250k.txt`
+- `iec_randoms50k.txt` — NEMA/IEC phantom (90 µCi body, cold spheres and lung insert) with 968 µCi and 400 µCi sources outside the axial FOV to raise randoms; 16,098 prompts / 10,579 delays in 3.19 s; **UTF-16 encoded**
+- Files written by the Windows listPrint utility may be UTF-16; detect the encoding (BOM or NUL bytes) before parsing
 - Each event line format: `N: PROMPT: xa(n) xb(n) tof(n) za(n) zb(n) lea(n) leb(n)` or same with `DELAY:`
 
 **Notebooks by purpose:**
@@ -31,6 +33,7 @@ Two types of input data files are used:
 - `MJS_AI_PET_Ring_Circular_Visualization_revD/revD2/revG/revH_*.ipynb` — Iterative improvements to circular polar ring visualization
 - `MJS_Sonnet4_Randoms_list_data_*.ipynb` — 3D heatmaps and TOF analysis of random coincidences (latest work)
 - `MJS_Claude_Starter_Agent_PET_List_20261109.ipynb` — Starter Claude agent (Anthropic SDK Tool Runner) with tools that load and analyze listPrint .txt files; needs `ANTHROPIC_API_KEY` in Colab Secrets
+- `MJS_Claude_Agent_Randoms_IEC_20261112.ipynb` — Agent with randoms visualization tools (TOF pedestal, TOF-position images, randoms-fraction map, sinograms, axial profile, ROI counts) for `iec_randoms50k.txt`
 
 ## Domain Knowledge
 
@@ -75,6 +78,8 @@ Two types of input data files are used:
 - For a **centered source**: `xb ≈ (xa + 288) % 576` (exact 180°, i.e., 288 crystals = half ring)
 - For an **offset source**: LOR pairs are non-diametric; shorter LORs are more frequent near the source
 - TOF is negative when the source is farther from xb (xb receives the photon later)
+- TOF position along the LOR: midpoint + (−tof × 2.93 mm) toward xa (c·Δt/2 per 19.53 ps bin). Verified: `3OCLK_0_1000.txt` lands at (322, 19) mm and `src_at_bottom_24934.txt` at (−8, −242) mm with crystal coords x = R·cos θ, y = −R·sin θ (y up)
+- Randoms (DELAY) have a flat TOF distribution across the window (std ≈ 238/√12 bins); individual randoms can't be identified among prompts, only estimated statistically from delays
 - `tofTstampScale` ≈ 19.53 ps/bin; multiply TOF bin by this to get picoseconds
 - Coincidence half-window (`c_h_w_b`) limits max TOF bin for valid coincidences (e.g., 119 bins × 19.5 ps ≈ 2,320 ps)
 
